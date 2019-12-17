@@ -5,7 +5,7 @@
 
 you may use next URLs
 
-1. /getToken (GET)
+1. <b>/getToken</b> (GET)
     NO PARAMS
 
 - in order to retrieve access token, session id and session key
