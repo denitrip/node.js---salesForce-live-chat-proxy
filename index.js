@@ -2,7 +2,6 @@ const express = require('express');
 const axios = require('axios');
 const app = express();
 const port = 3000;
-const path = require('path');
 const bodyParser = require('body-parser');
 const source_url = 'https://d.la2-c2-ukb.salesforceliveagent.com';
 
@@ -73,7 +72,6 @@ app.post('/sendMessage', (req, res) => {
   const payLoad = {
     'text': req.body.text
   };
-  console.log(req.body.text);
   axios.post(`${source_url}/chat/rest/Chasitor/ChatMessage`,
     payLoad, {headers: headers} ).then(response => response.data).then(response => res.send(response));
 });
