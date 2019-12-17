@@ -7,7 +7,8 @@ const source_url = 'https://d.la2-c2-ukb.salesforceliveagent.com';
 
 app.use(bodyParser());
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
   next();
 });
 
@@ -43,7 +44,7 @@ app.post('/startSession', (req, res) => {
     "isPost":"true"
   };
   axios.post(`${source_url}/chat/rest/Chasitor/ChasitorInit`,
-    payLoad, {headers: headers} ).then(response => response.data).then(response => res.send(response));
+    payLoad, {headers: headers} ).then(response => response.data).then(response => res.send({'status': 'OK'}));
 });
 
 app.get('/getMessages', (req, res) => {
