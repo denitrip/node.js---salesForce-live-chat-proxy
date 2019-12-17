@@ -15,6 +15,7 @@ you may use next URLs
     1. session_token
     2. session_key
     3. session_id
+
 in JSON format {}
 
 - will return "OK" message (method start the session with agent)
@@ -31,6 +32,7 @@ in JSON format {}
       1. session_token
       2. session_key
       3. text
+  
   in JSON format {}
   
   - in order to send text message to agent.
