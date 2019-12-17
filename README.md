@@ -10,7 +10,7 @@ you may use next URLs
 
 - in order to retrieve access token, session id and session key
 
-2. /startSession (POST)
+2. <b>/startSession</b>  (POST)
   params (body) - 
     1. session_token
     2. session_key
@@ -19,14 +19,14 @@ in JSON format {}
 
 - will return "OK" message (method start the session with agent)
 
-3. /getMessages (GET)
+3. <b>/getMessages</b>  (GET)
   params (query params) - 
      1. session_token
      2. session_key
      
 - in order to download the messages from agent
 
-4. /sendMessage (POST)
+4. <b>/sendMessage</b>  (POST)
   params(body) - 
       1. session_token
       2. session_key
