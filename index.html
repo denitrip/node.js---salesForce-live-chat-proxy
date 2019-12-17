@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Live chat</title>
+</head>
+<body>
+<div>Live Chat</div>
+<div class="container">
+  <button class="chat-btn" id="chatBtn">Init Chat</button>
+  <button class="chat-btn" id="chatBtn2">Start Session</button>
+  <button class="chat-btn" id="chatBtn3">Get Messages</button>
+  <button class="chat-btn" id="chatBtn4">Send Test Message</button>
+</div>
+<div class="response" id="response"></div>
+<script>
+  let session_key = '';
+  let session_token = '';
+  let session_id = '';
+  const responseContainer = document.getElementById('response');
+  document.getElementById('chatBtn').addEventListener('click', async () => {
+    const response = await fetch('http://localhost:3000/getToken', {method: "GET"}).then(response => response.json());
+    session_key = response.key;
+    session_id = response.id;
+    session_token = response.affinityToken;
+    responseContainer.textContent = JSON.stringify(response);
+  });
+  document.getElementById('chatBtn2').addEventListener('click', async () => {
+    const response = await fetch('http://localhost:3000/startSession',{
+      method: "POST",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        session_key: session_key,
+        session_token: session_token,
+        session_id: session_id})
+    });
+    responseContainer.textContent = response.statusText;
+  });
+  document.getElementById('chatBtn3').addEventListener('click', async () => {
+    const response = await fetch('http://localhost:3000/getMessages?'+ new URLSearchParams({
+      session_token: session_token,
+      session_key: session_key,
+    })).then(response => response.json());
+    responseContainer.textContent = JSON.stringify(response);
+  });
+  document.getElementById('chatBtn4').addEventListener('click', async () => {
+    const response = await fetch('http://localhost:3000/sendMessage', {
+      method: "POST",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        session_key: session_key,
+        session_token: session_token,
+        text: 'hey dude, wasssap?'
+      })
+    });
+    responseContainer.textContent = JSON.stringify(response);
+  });
+</script>
+</body>
+</html>
