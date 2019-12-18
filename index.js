@@ -13,15 +13,17 @@ app.use((req, res, next) => {
 });
 
 app.get('/getToken', (req, res) => {
+  console.log('working with /getToken');
   axios.get(`${source_url}/chat/rest/System/SessionId`,
     {headers: {"X-LIVEAGENT-AFFINITY": 'null', "X-LIVEAGENT-API-VERSION": '47'}, withCredentials: true})
     .then(response => response.data)
     .then(response =>{
       res.send(response)
-  });
+  }) .catch(error => res.status(error.response.status).send(error.response.statusText));
 });
 
 app.post('/startSession', (req, res) => {
+  console.log('working with /startSession');
   const headers = {
     'X-LIVEAGENT-API-VERSION': '47',
     "X-LIVEAGENT-AFFINITY": req.body.session_token,
@@ -44,10 +46,12 @@ app.post('/startSession', (req, res) => {
     "isPost":"true"
   };
   axios.post(`${source_url}/chat/rest/Chasitor/ChasitorInit`,
-    payLoad, {headers: headers} ).then(response => response.data).then(response => res.send({'status': 'OK'}));
+    payLoad, {headers: headers} ).then(response => response.data).then(response => res.send({'status': 'OK'}))
+    .catch(error => res.status(error.response.status).send(error.response.statusText));
 });
 
 app.get('/getMessages', (req, res) => {
+  console.log('working with /getMessages');
   const headers = {
     'X-LIVEAGENT-API-VERSION': '47',
     "X-LIVEAGENT-AFFINITY": req.query.session_token,
@@ -60,10 +64,11 @@ app.get('/getMessages', (req, res) => {
     .then(response => response.data)
     .then(response =>{
       res.send(response)
-    });
+    }) .catch(error => res.status(error.response.status).send(error.response.statusText));
 });
 
 app.post('/sendMessage', (req, res) => {
+  console.log('working with /sendMessage');
   const headers = {
     'X-LIVEAGENT-API-VERSION': '47',
     "X-LIVEAGENT-AFFINITY": req.body.session_token,
@@ -74,7 +79,8 @@ app.post('/sendMessage', (req, res) => {
     'text': req.body.text
   };
   axios.post(`${source_url}/chat/rest/Chasitor/ChatMessage`,
-    payLoad, {headers: headers} ).then(response => response.data).then(response => res.send(response));
+    payLoad, {headers: headers} ).then(response => response.data).then(response => res.send({status: 'OK'}))
+    .catch(error => res.status(error.response.status).send(error.response.statusText));
 });
 
 app.get('/', (req, res) => {
