@@ -59,8 +59,30 @@ app.get('/getMessages', (req, res) => {
     'X-LIVEAGENT-SEQUENCE': '1',
     'Content-Type': 'application/json'
   };
+  const params = {
+    'ack': req.query.session_ack
+  };
   axios.get(`${source_url}/chat/rest/System/Messages`,
-    {headers: headers})
+    {headers: headers, params: params})
+    .then(response => response.data)
+    .then(response =>{
+      res.send(response)
+    }) .catch(error => res.status(error.response.status).send(error.response.statusText));
+});
+
+app.get('/reconnectSession', (req, res) => {
+  console.log('working with /reconnectSession');
+  const headers = {
+    'X-LIVEAGENT-API-VERSION': '47',
+    "X-LIVEAGENT-AFFINITY": req.query.session_token,
+    'X-LIVEAGENT-SESSION-KEY': req.query.session_key,
+    'Content-Type': 'application/json'
+  };
+  const params = {
+    'ReconnectSession.offset': req.query.session_offset
+  };
+  axios.get(`${source_url}/chat/rest/System/ReconnectSession`,
+    {headers: headers, params: params})
     .then(response => response.data)
     .then(response =>{
       res.send(response)
@@ -83,6 +105,33 @@ app.post('/sendMessage', (req, res) => {
     .catch(error => res.status(error.response.status).send(error.response.statusText));
 });
 
+app.post('/resyncState', (req, res) => {
+  console.log('working with /resyncState');
+  const headers = {
+    'X-LIVEAGENT-API-VERSION': '47',
+    "X-LIVEAGENT-AFFINITY": req.body.session_token,
+    'X-LIVEAGENT-SESSION-KEY': req.body.session_key,
+    'Content-Type': 'application/json'
+  };
+  const payLoad = {
+    "organizationId":"00D2w000001NTbv",
+    "deploymentId":"5722w000000GpDH",
+    "buttonId":"5732w000000GpPk",
+    "sessionId": req.body.session_id,
+    "userAgent":"Lynx/2.8.8",
+    "language":"en-US",
+    "screenResolution":"1900x1080",
+    "visitorName":"Hello, it's me!",
+    "prechatDetails":[],
+    "prechatEntities":[],
+    "receiveQueueUpdates":"true",
+    "isPost":"true"
+  };
+  axios.post(`${source_url}/chat/rest/Chasitor/ChasitorResyncState`,
+    payLoad, {headers: headers} ).then(response => response.data).then(response => res.send({status: 'OK'}))
+    .catch(error => res.status(error.response.status).send(error.response.statusText));
+});
+
 app.get('/', (req, res) => {
   res.sendFile('/index.html', {root: __dirname });
 });
@@ -93,6 +142,8 @@ console.log(`/startSession`);
 console.log(`/getToken`);
 console.log(`/getMessages`);
 console.log(`/sendMessage`);
+console.log(`/reconnectSession`);
+console.log(`/resyncState`);
 console.log(`====================================`);
 
 
